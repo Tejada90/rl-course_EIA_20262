@@ -1,0 +1,18 @@
+services:
+
+  rl-course:
+
+    build:
+      context: .
+
+      dockerfile: docker/Dockerfile
+
+    volumes:
+      - .:/workspace
+
+    ports:
+      - "8888:8888"
+
+    stdin_open: true
+
+    tty: true
