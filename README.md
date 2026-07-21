@@ -1,14 +1,30 @@
 # Curso de Aprendizaje por Refuerzo
 
-## Instalación
+Repositorio oficial del curso.
 
-### Clonar
+---
+
+# Tecnologías
+
+- Python 3.11
+- Docker
+- Visual Studio Code
+- GitHub
+- Gymnasium
+- PyTorch
+
+---
+
+# Instalación
+
+## 1. Clonar repositorio
 
 ```bash
 git clone https://github.com/Tejada90/rl-course_EIA_20262/tree/main
+cd rl-course_EIA_20262
 ```
 
-### Abrir
+## 2. Abrir
 
 ```bash
 code rl-course
