@@ -1,0 +1,46 @@
+name: Pruebas automáticas
+
+on:
+  push:
+    branches:
+      - main
+      - "challenge-*"
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Ejecutar pruebas del repositorio
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Actualizar pip
+        run: python -m pip install --upgrade pip
+
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements.txt
+
+      - name: Mostrar versiones
+        run: |
+          python --version
+          python -m pip --version
+          pytest --version
+          jupyter --version
+
+      - name: Ejecutar pruebas
+        run: pytest -v
