@@ -27,7 +27,7 @@ cd rl-course_EIA_20262
 ## 2. Abrir
 
 ```bash
-code rl-course
+code rl-course_EIA_20262
 ```
 
 ### Levantar Docker
