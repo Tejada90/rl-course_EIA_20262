@@ -1,49 +1,37 @@
 # Curso de Aprendizaje por Refuerzo
 
-Bienvenido al repositorio oficial del curso.
+## Instalación
 
-## Objetivos
+### Clonar
 
-- Comprender los fundamentos de Reinforcement Learning.
-- Implementar algoritmos clásicos.
-- Resolver retos prácticos.
-- Aprender buenas prácticas de ingeniería.
+```bash
+git clone URL_REPOSITORIO
+```
 
----
+### Abrir
 
-## Tecnologías
+```bash
+code rl-course
+```
 
-- Python 3.11
-- Gymnasium
-- PyTorch
-- Docker
-- GitHub
+### Levantar Docker
 
----
+```bash
+docker compose up -d
+```
 
-## Inicio Rápido
+### Abrir entorno
 
-1. Clonar repositorio.
-2. Levantar Docker.
-3. Ejecutar pruebas.
-4. Resolver el reto.
-5. Crear Pull Request.
+VS Code
 
----
+↓
 
-## Retos
-
-| Reto | Tema |
-|-------|-------|
-| 01 | Multi Armed Bandits |
-| 02 | Q-Learning |
-| 03 | DQN |
+Reopen in Container
 
 ---
 
-## Documentación
+## Verificar instalación
 
-Consultar carpeta:
-
-```text
-docs/
+```bash
+pytest
+```
