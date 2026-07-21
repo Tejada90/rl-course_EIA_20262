@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens"
+  ]
+}
+``
