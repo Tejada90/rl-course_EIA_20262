@@ -1,19 +1,30 @@
 {
-  "name": "RL Course_EIA_20262",
-
+  "name": "Curso RL EIA 2026-2",
   "dockerComposeFile": "../docker-compose.yml",
-
-  "service": "rl-course_EIA_20262",
-
+  "service": "rl-course",
   "workspaceFolder": "/workspace",
-
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
+        "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
+        "ms-azuretools.vscode-docker",
         "eamodio.gitlens"
-      ]
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": [
+          "challenges"
+        ],
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
     }
-  }
+  },
+  "postCreateCommand": "python --version && pytest --version",
+  "postStartCommand": "git config --global --add safe.directory /workspace"
 }
