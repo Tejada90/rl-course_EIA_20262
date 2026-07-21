@@ -5,7 +5,7 @@
 ### Clonar
 
 ```bash
-git clone URL_REPOSITORIO
+git clone https://github.com/Tejada90/rl-course_EIA_20262/tree/main
 ```
 
 ### Abrir
