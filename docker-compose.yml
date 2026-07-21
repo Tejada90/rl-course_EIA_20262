@@ -4,14 +4,14 @@ services:
 
     build:
       context: .
-
       dockerfile: docker/Dockerfile
+
+    container_name: rl-course
 
     volumes:
       - .:/workspace
 
-    ports:
-      - "8888:8888"
+    working_dir: /workspace
 
     stdin_open: true
 
