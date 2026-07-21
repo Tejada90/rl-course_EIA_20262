@@ -1,0 +1,19 @@
+{
+  "name": "RL Course_EIA_20262",
+
+  "dockerComposeFile": "../docker-compose.yml",
+
+  "service": "rl-course_EIA_20262",
+
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}
