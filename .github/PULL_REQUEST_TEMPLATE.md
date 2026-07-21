@@ -8,11 +8,7 @@
 
 **Reto entregado:**
 
-- [ ] Challenge 01 — Multi-Armed Bandits
-- [ ] Challenge 02 — Q-Learning
-- [ ] Challenge 03 — Deep Q-Network
-- [ ] Otro
-
+- Challenge [X] - [Descripción]
 ## Descripción
 
 Explica brevemente la solución implementada:
