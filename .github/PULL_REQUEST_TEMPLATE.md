@@ -1,4 +1,4 @@
-# Entrega de reto
+# Entrega del reto
 
 ## Información del estudiante
 
@@ -8,32 +8,65 @@
 
 **Reto entregado:**
 
-- Challenge [X] - [Descripción]
-## Descripción
+- [ ] Reto 01 — Simulador de máquinas
+- [ ] Otro
 
-Explica brevemente la solución implementada:
+## Archivos entregados
 
-- ¿Qué estrategia utilizaste?
-- ¿Qué decisiones de diseño tomaste?
-- ¿Qué dificultades encontraste?
-- ¿Cómo verificaste tu solución?
+- [ ] Notebook `.ipynb`.
+- [ ] Exportación `.html`.
+- [ ] No incluí archivos innecesarios.
+- [ ] Los nombres de los archivos siguen la convención solicitada.
 
-## Pruebas
+## Verificaciones
 
-Marca las validaciones realizadas:
-
-- [ ] Abrí el proyecto dentro del Dev Container.
+- [ ] Trabajé dentro del Dev Container.
+- [ ] Cambié el nombre del notebook.
+- [ ] Ejecuté todas las celdas desde el inicio.
+- [ ] El notebook no presenta errores.
+- [ ] Se generaron 1.000 recompensas por máquina.
+- [ ] Incluí la tabla comparativa.
+- [ ] Incluí una gráfica por máquina.
+- [ ] Incluí el experimento con diferentes tamaños de muestra.
+- [ ] Incluí la interpretación de resultados.
+- [ ] Documenté el uso de inteligencia artificial.
+- [ ] Incluí las conclusiones.
+- [ ] Exporté el notebook a HTML.
 - [ ] Ejecuté `pytest`.
-- [ ] Todas las pruebas públicas fueron exitosas.
-- [ ] Revisé los archivos modificados con `git status`.
-- [ ] Revisé los cambios con `git diff`.
+- [ ] GitHub Actions terminó correctamente.
 - [ ] No modifiqué archivos restringidos.
-- [ ] No incluí modelos, datasets, logs o archivos pesados.
 
-## Resultado de las pruebas
+## Resultados principales
 
-Copia aquí el resumen generado por `pytest`:
+**Máquina con mayor media estimada:**
+
+**Máquina con mayor variabilidad:**
+
+**Conclusión principal:**
+
+## Resultado de pytest
 
 ```text
-Pegar resultado aquí
-``
+Pega aquí el resumen generado por pytest.
+```
+
+## Uso de inteligencia artificial
+
+**Herramienta utilizada:**
+
+**Uso principal:**
+
+**Ajustes realizados manualmente:**
+
+**Forma de validación:**
+
+## Archivos modificados
+
+```text
+challenges/challenge_01_bandits/submission/reto_01_apellido_nombre.ipynb
+challenges/challenge_01_bandits/submission/exports/reto_01_apellido_nombre.html
+```
+
+## Comentarios adicionales
+
+Incluye cualquier información importante para la revisión.
