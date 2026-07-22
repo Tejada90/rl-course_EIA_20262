@@ -110,6 +110,16 @@ Para ver más detalles:
 pytest -v
 ```
 
+### 7. Ejecutar el ejemplo de Docker
+
+Para comprobar el entorno y ejecutar una simulación pequeña:
+
+```bash
+python examples/docker_quickstart.py
+```
+
+Consulta la guía completa en `examples/README.md`.
+
 ## Retos
 
 | Reto | Tema | Estado |
