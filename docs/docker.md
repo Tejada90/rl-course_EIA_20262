@@ -138,7 +138,10 @@ No instales dependencias solamente con `pip install` dentro del contenedor, porq
 
 El procedimiento correcto es:
 
-1. Agregar la dependencia a `requirements.txt`.
+1. Agregar la dependencia al archivo correspondiente:
+   - `requirements.txt` para ejecución y notebooks.
+   - `requirements-dev.txt` para pruebas y calidad de código.
+   - `requirements-torch-cpu.txt` exclusivamente para PyTorch CPU.
 2. Reconstruir el contenedor.
 3. Verificar que las pruebas funcionen.
 
