@@ -166,6 +166,7 @@ docs/workflow.md
 
 ## Documentación
 
+- docs/guia_inicio_estudiantes.md
 - docs/setup.md
 - docs/docker.md
 - docs/workflow.md
