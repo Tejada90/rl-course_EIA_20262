@@ -125,10 +125,11 @@ Consulta la guía completa en `examples/README.md`.
 | Reto | Tema | Estado |
 |---|---|---|
 | 01 | Multi-Armed Bandits | Disponible |
-| 02 | Q-Learning | Próximamente |
-| 03 | Deep Q-Network | Próximamente |
-| 04 | Policy Gradient | Próximamente |
-| 05 | PPO | Próximamente |
+| 02 | Comparación de algoritmos bandit | Disponible |
+| 03 | Q-Learning | Próximamente |
+| 04 | Deep Q-Network | Próximamente |
+| 05 | Policy Gradient | Próximamente |
+| 06 | PPO | Próximamente |
 
 El primer reto se encuentra en:
 
@@ -139,6 +140,16 @@ challenges/challenge_01_bandits/
 Consulta su enunciado:
 
 challenges/challenge_01_bandits/README.md
+
+El segundo reto se encuentra en:
+
+```text
+challenges/challenge_02_bandit_algorithms/
+```
+
+Consulta su enunciado:
+
+challenges/challenge_02_bandit_algorithms/README.md
 
 ## Flujo de entrega
 

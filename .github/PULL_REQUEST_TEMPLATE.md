@@ -9,6 +9,7 @@
 **Reto entregado:**
 
 - [ ] Reto 01 — Simulador de máquinas
+- [ ] Reto 02 — Comparación de algoritmos bandit
 - [ ] Otro
 
 ## Archivos entregados
@@ -28,6 +29,8 @@
 - [ ] Incluí la tabla comparativa.
 - [ ] Incluí una gráfica por máquina.
 - [ ] Incluí el experimento con diferentes tamaños de muestra.
+- [ ] Si entrego el Reto 2, implementé los cuatro algoritmos solicitados.
+- [ ] Si entrego el Reto 2, incluí métricas, sensibilidad y comparación agregada.
 - [ ] Incluí la interpretación de resultados.
 - [ ] Documenté el uso de inteligencia artificial.
 - [ ] Incluí las conclusiones.
