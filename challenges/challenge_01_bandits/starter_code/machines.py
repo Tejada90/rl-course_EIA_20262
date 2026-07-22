@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 
-
 MACHINES: dict[str, dict[str, float]] = {
     "A1": {"mean": 1.0, "std": 0.5},
     "A2": {"mean": 2.0, "std": 0.5},

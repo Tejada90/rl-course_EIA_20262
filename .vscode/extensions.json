@@ -5,7 +5,7 @@
     "ms-toolsai.jupyter",
     "ms-vscode-remote.remote-containers",
     "ms-azuretools.vscode-docker",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "charliermarsh.ruff"
   ]
 }
-``

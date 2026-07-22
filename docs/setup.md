@@ -158,6 +158,9 @@ La primera construcción puede tardar varios minutos porque Docker debe:
 - Instalar las dependencias.
 - Configurar las extensiones.
 
+El entorno utiliza PyTorch para CPU, por lo que no requiere una GPU NVIDIA ni
+descarga las bibliotecas CUDA.
+
 Las siguientes aperturas serán más rápidas.
 
 ## 8. Confirmar que estás dentro del contenedor
@@ -253,7 +256,7 @@ docker compose down
 
 ## 14. Reconstruir el entorno
 
-Si cambia el archivo `requirements.txt` o el `Dockerfile`:
+Si cambia alguno de los archivos `requirements*.txt` o el `Dockerfile`:
 
 1. Presiona `Ctrl + Shift + P`.
 2. Selecciona:
@@ -273,4 +276,3 @@ git status
 ```
 
 sin recibir errores.
-``

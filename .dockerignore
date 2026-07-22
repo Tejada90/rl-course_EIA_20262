@@ -1,6 +1,8 @@
 .git
 .gitignore
 .github
+.editorconfig
+.vscode
 
 __pycache__
 *.pyc

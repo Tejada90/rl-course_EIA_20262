@@ -13,10 +13,10 @@ services:
       PYTHONPATH: /workspace
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
     stdin_open: true
     tty: true
     init: true
 
     command: sleep infinity
-``

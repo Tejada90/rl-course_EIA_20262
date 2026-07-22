@@ -80,6 +80,10 @@ Dev Containers: Reopen in Container
 
 La primera construcción puede tardar varios minutos.
 
+La imagen instala la versión de PyTorch para CPU. Esto evita descargar
+componentes CUDA innecesarios y hace que el entorno sea más ligero y
+reproducible en los equipos del curso.
+
 ### 5. Verificar el entorno
 
 Abre una terminal integrada en Visual Studio Code y ejecuta:

@@ -4,27 +4,14 @@
   "service": "rl-course",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
-  "remoteUser": "root",
+  "remoteUser": "vscode",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-toolsai.jupyter",
-        "ms-azuretools.vscode-docker",
-        "eamodio.gitlens"
-      ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.testing.pytestEnabled": true,
-        "python.testing.unittestEnabled": false,
-        "python.testing.pytestArgs": [
-          "challenges"
-        ],
         "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
   },
-  "postCreateCommand": "python --version && pytest --version",
+  "postCreateCommand": "python -c \"import gymnasium, numpy, torch\" && pytest --collect-only -q",
   "postStartCommand": "git config --global --add safe.directory /workspace"
 }
