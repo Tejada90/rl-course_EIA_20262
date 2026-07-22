@@ -1,5 +1,8 @@
 # Reto 01 — Simulador de máquinas Multi-Armed Bandit
 
+Antes de comenzar, sigue la guía completa de preparación y entrega disponible
+en `docs/guia_inicio_estudiantes.md`.
+
 ## 1. Propósito
 
 En este reto se construirá un simulador sencillo de un problema de máquinas tragamonedas o **Multi-Armed Bandit**.
