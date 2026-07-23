@@ -151,6 +151,28 @@ Consulta su enunciado:
 
 challenges/challenge_02_bandit_algorithms/README.md
 
+## Laboratorios en clase
+
+Los laboratorios son actividades guiadas para experimentar durante la sesión.
+No forman parte de los retos evaluables.
+
+| Laboratorio | Tema | Material |
+|---|---|---|
+| 01 | SARSA con CliffWalking | `labs/lab_sarsa_cliffwalking/` |
+
+El primer laboratorio permite modificar políticas aleatoria, greedy,
+ε-greedy y softmax mediante la interfaz de Gymnasium:
+
+```text
+labs/lab_sarsa_cliffwalking/laboratorio_sarsa.ipynb
+```
+
+Consulta las instrucciones para estudiantes y docentes en:
+
+```text
+labs/lab_sarsa_cliffwalking/README.md
+```
+
 ## Flujo de entrega
 
 Cada entrega debe seguir este flujo:
