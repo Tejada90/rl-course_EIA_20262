@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Simon Garces">
+<meta name="description" content="Laboratorio interactivo de las cuatro estrategias de exploracion del Reto 03 de Aprendizaje por Refuerzo, Universidad EIA.">
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; }
+  *, *::before, *::after { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<title>Laboratorio de estrategias de exploración</title>
+<style>
+  :root {
+    --bg: #F2F5F7; --surface: #FFFFFF; --surface-2: #E9EEF2;
+    --ink: #101A22; --ink-2: #4A5C6A; --ink-3: #7C8D9B;
+    --rule: #D6DFE6; --accent: #2C6E8F;
+    --s-eps: #2a78d6; --s-opt: #c24f1f; --s-ucb: #147a55; --s-sof: #4a3aa7;
+    --win-bg: rgba(44, 110, 143, 0.10);
+    --warn: #a8501c;
+    --font-math: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    --step: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0C1116; --surface: #141C24; --surface-2: #1B252F;
+      --ink: #E8EEF2; --ink-2: #A3B4C1; --ink-3: #6E7F8D;
+      --rule: #253340; --accent: #5FA8CC;
+      --s-eps: #3987e5; --s-opt: #d95926; --s-ucb: #1baf7a; --s-sof: #9085e9;
+      --win-bg: rgba(95, 168, 204, 0.14); --warn: #e0a855;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0C1116; --surface: #141C24; --surface-2: #1B252F;
+    --ink: #E8EEF2; --ink-2: #A3B4C1; --ink-3: #6E7F8D;
+    --rule: #253340; --accent: #5FA8CC;
+    --s-eps: #3987e5; --s-opt: #d95926; --s-ucb: #1baf7a; --s-sof: #9085e9;
+    --win-bg: rgba(95, 168, 204, 0.14); --warn: #e0a855;
+  }
+  :root[data-theme="light"] {
+    --bg: #F2F5F7; --surface: #FFFFFF; --surface-2: #E9EEF2;
+    --ink: #101A22; --ink-2: #4A5C6A; --ink-3: #7C8D9B;
+    --rule: #D6DFE6; --accent: #2C6E8F;
+    --s-eps: #2a78d6; --s-opt: #c24f1f; --s-ucb: #147a55; --s-sof: #4a3aa7;
+    --win-bg: rgba(44, 110, 143, 0.10); --warn: #a8501c;
+  }
+
+  * { box-sizing: border-box; }
+
+  .page {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font-ui); font-size: var(--step); line-height: 1.55;
+    padding: clamp(1.25rem, 1rem + 2vw, 3rem) clamp(1rem, 0.5rem + 2vw, 2rem) 4rem;
+    display: flex; flex-direction: column; gap: 1.75rem;
+    max-width: 1180px; margin: 0 auto;
+  }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  h1 {
+    font-family: var(--font-math);
+    font-size: clamp(1.7rem, 1.4rem + 1.6vw, 2.6rem);
+    font-weight: 600; letter-spacing: -0.015em; line-height: 1.15;
+  }
+  .lede { color: var(--ink-2); max-width: 62ch; margin: 0; }
+  .eyebrow {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.13em;
+    font-weight: 650; color: var(--ink-3);
+  }
+  .panel {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 4px;
+    padding: clamp(1rem, 0.8rem + 1vw, 1.6rem);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+
+  /* control segmentado de entorno */
+  .envbar { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .envbtn {
+    font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600;
+    color: var(--ink-2); background: var(--surface); cursor: pointer;
+    border: 1px solid var(--rule); border-radius: 3px;
+    padding: 0.5rem 0.9rem; display: flex; flex-direction: column; gap: 0.1rem;
+    text-align: left; line-height: 1.3;
+  }
+  .envbtn small { font-weight: 400; font-size: 0.72rem; color: var(--ink-3); }
+  .envbtn[aria-pressed="true"] {
+    border-color: var(--accent); color: var(--ink);
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+  .envbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* aviso de escala */
+  .scale {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
+  }
+  .scale div {
+    background: var(--surface-2); border-radius: 3px; padding: 0.7rem 0.85rem;
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .scale .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-3); }
+  .scale .v {
+    font-family: var(--font-mono); font-size: 1.15rem; font-weight: 650;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .scale .d { font-size: 0.76rem; color: var(--ink-2); }
+  .scale .d.alert { color: var(--warn); font-weight: 600; }
+
+  .state-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+  .act {
+    border: 1px solid var(--rule); border-radius: 3px; padding: 0.75rem;
+    display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface-2);
+  }
+  .act-name {
+    font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: baseline; color: var(--ink-2);
+  }
+  .act-name .arrow { font-size: 1.05rem; color: var(--ink); }
+  .ctl { display: flex; flex-direction: column; gap: 0.25rem; }
+  .ctl-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.74rem; color: var(--ink-3); letter-spacing: 0.04em; gap: 0.5rem;
+  }
+  .ctl-row output {
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    color: var(--ink); font-size: 0.84rem; font-weight: 600;
+  }
+  input[type="range"] { width: 100%; accent-color: var(--accent); height: 1.1rem; cursor: pointer; }
+  input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .strategies { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 1.25rem; }
+  .strat {
+    background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--hue);
+    border-radius: 4px; padding: clamp(1rem, 0.8rem + 0.8vw, 1.4rem);
+    display: flex; flex-direction: column; gap: 0.9rem;
+  }
+  .strat h3 { font-family: var(--font-math); font-size: 1.2rem; font-weight: 600; color: var(--hue); }
+  .strat .tag { font-size: 0.72rem; color: var(--ink-3); letter-spacing: 0.03em; }
+  .formula {
+    font-family: var(--font-math); font-style: italic; font-size: 1.02rem; color: var(--ink-2);
+    padding: 0.5rem 0.7rem; background: var(--surface-2); border-radius: 3px; overflow-x: auto;
+  }
+  .work {
+    font-family: var(--font-mono); font-size: 0.76rem; font-variant-numeric: tabular-nums;
+    line-height: 1.75; overflow-x: auto; white-space: pre; color: var(--ink-2); margin: 0;
+  }
+  .work .win { color: var(--hue); font-weight: 700; }
+  .work .lbl { color: var(--ink-3); }
+
+  .bars { display: flex; flex-direction: column; gap: 0.3rem; }
+  .bar-row { display: grid; grid-template-columns: 5.4rem 1fr 3.6rem; align-items: center; gap: 0.6rem; }
+  .bar-lab { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-3); }
+  .bar-track { background: var(--surface-2); border-radius: 2px; height: 0.85rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--hue); border-radius: 2px; transition: width 0.18s ease; }
+  .bar-val {
+    font-family: var(--font-mono); font-size: 0.74rem; font-variant-numeric: tabular-nums;
+    text-align: right; color: var(--ink-2);
+  }
+  @media (prefers-reduced-motion: reduce) { .bar-fill { transition: none; } }
+
+  .note { font-size: 0.8rem; color: var(--ink-3); border-left: 2px solid var(--hue); padding-left: 0.7rem; margin: 0; }
+  .decay {
+    display: flex; gap: 0.7rem; align-items: baseline; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    font-variant-numeric: tabular-nums; color: var(--ink-2);
+  }
+  .decay strong { color: var(--s-opt); font-size: 1.15rem; }
+
+  .cmp-wrap { overflow-x: auto; }
+  table.cmp { border-collapse: collapse; width: 100%; min-width: 460px; font-variant-numeric: tabular-nums; }
+  table.cmp th, table.cmp td {
+    padding: 0.5rem 0.6rem; text-align: right; border-bottom: 1px solid var(--rule);
+    font-family: var(--font-mono); font-size: 0.8rem;
+  }
+  table.cmp th { color: var(--ink-3); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.05em; }
+  table.cmp td:first-child, table.cmp th:first-child {
+    text-align: left; font-family: var(--font-ui); font-weight: 600;
+  }
+  table.cmp td.hi { background: var(--win-bg); font-weight: 700; }
+
+  .footnote { color: var(--ink-3); font-size: 0.82rem; max-width: 70ch; }
+  code {
+    font-family: var(--font-mono); font-size: 0.88em; background: var(--surface-2);
+    padding: 0.1em 0.35em; border-radius: 2px;
+  }
+</style>
+
+<div class="page">
+
+  <header style="display:flex;flex-direction:column;gap:0.6rem;">
+    <span class="eyebrow">Reto 03 · Q-Learning</span>
+    <h1>Cuatro maneras de mirar la misma fila</h1>
+    <p class="lede">
+      Las cuatro estrategias reciben exactamente los mismos datos: una fila <code>Q(s,·)</code>
+      y una fila <code>counts[s,·]</code>. Cambia de entorno y verás que <strong>los mismos
+      hiperparámetros del reto significan cosas distintas</strong> según la escala de las recompensas.
+    </p>
+  </header>
+
+  <section class="panel">
+    <span class="eyebrow">Entorno · filas Q reales, extraídas de agentes entrenados</span>
+    <div class="envbar" id="envbar" role="group" aria-label="Elegir entorno"></div>
+    <p class="footnote" id="envNote"></p>
+    <div class="scale" id="scale"></div>
+  </section>
+
+  <section class="panel">
+    <span class="eyebrow">El estado que las cuatro leen</span>
+    <div class="state-grid" id="stateGrid"></div>
+    <p class="footnote" id="nsLine"></p>
+  </section>
+
+  <section class="strategies">
+
+    <article class="strat" style="--hue: var(--s-eps);">
+      <div><h3>ε-greedy</h3><span class="tag">Exploración ciega · reparto uniforme</span></div>
+      <div class="formula">a = uniforme con prob. ε ; si no, argmax<sub>a</sub> Q(s,a)</div>
+      <div class="ctl">
+        <div class="ctl-row"><label for="eps">ε — probabilidad de explorar</label><output id="epsOut"></output></div>
+        <input type="range" id="eps" min="0" max="1" step="0.01" value="0.10">
+      </div>
+      <pre class="work" id="epsWork"></pre>
+      <div class="bars" id="epsBars"></div>
+      <p class="note">Su reparto <strong>no depende de la escala de Q</strong>: es el mismo en los tres entornos. Compáralo con softmax al cambiar de entorno.</p>
+    </article>
+
+    <article class="strat" style="--hue: var(--s-opt);">
+      <div><h3>ε-greedy optimista</h3><span class="tag">Misma regla · la diferencia está en Q₀</span></div>
+      <div class="formula">idéntica a ε-greedy, pero la tabla arranca en Q₀</div>
+      <div class="ctl">
+        <div class="ctl-row"><label for="epsOpt">ε</label><output id="epsOptOut"></output></div>
+        <input type="range" id="epsOpt" min="0" max="0.3" step="0.005" value="0.01">
+      </div>
+      <div class="bars" id="optBars"></div>
+      <p class="note" style="margin-bottom:0.2rem;">Su exploración no se ve aquí: ya ocurrió. Vive en la inicialización, y se gasta:</p>
+      <div class="ctl">
+        <div class="ctl-row"><label for="initQ0">Q₀ inicial</label><output id="initQ0Out"></output></div>
+        <input type="range" id="initQ0" min="0.5" max="25" step="0.5" value="5">
+      </div>
+      <div class="ctl">
+        <div class="ctl-row"><label for="alpha">α — tasa de aprendizaje</label><output id="alphaOut"></output></div>
+        <input type="range" id="alpha" min="0.02" max="1" step="0.02" value="0.10">
+      </div>
+      <pre class="work" id="optWork"></pre>
+      <div class="decay">
+        <span>actualizaciones hasta alcanzar el rango real:</span>
+        <strong id="decaySteps"></strong>
+        <span>por cada par (s,a)</span>
+      </div>
+    </article>
+
+    <article class="strat" style="--hue: var(--s-ucb);">
+      <div><h3>UCB</h3><span class="tag">Exploración dirigida · la única que usa counts</span></div>
+      <div class="formula">a = argmax<sub>a</sub> [ Q(s,a) + c·√( ln(N(s)+1) / N(s,a) ) ]</div>
+      <div class="ctl">
+        <div class="ctl-row"><label for="cc">c — peso de la incertidumbre</label><output id="ccOut"></output></div>
+        <input type="range" id="cc" min="0" max="10" step="0.05" value="1">
+      </div>
+      <pre class="work" id="ucbWork"></pre>
+      <div class="bars" id="ucbBars"></div>
+      <p class="note">El bono está en unidades de recompensa, así que <strong>compite contra la escala de Q</strong>. Un mismo <code>c</code> domina en Blackjack y es irrelevante en Taxi.</p>
+    </article>
+
+    <article class="strat" style="--hue: var(--s-sof);">
+      <div><h3>Softmax</h3><span class="tag">Exploración proporcional al valor</span></div>
+      <div class="formula">P(a|s) = e<sup>Q(s,a)/τ</sup> ⁄ Σ<sub>b</sub> e<sup>Q(s,b)/τ</sup></div>
+      <div class="ctl">
+        <div class="ctl-row"><label for="tau">τ — temperatura</label><output id="tauOut"></output></div>
+        <input type="range" id="tau" min="0.05" max="10" step="0.05" value="0.50">
+      </div>
+      <pre class="work" id="sofWork"></pre>
+      <div class="bars" id="sofBars"></div>
+      <p class="note" id="sofNote"></p>
+    </article>
+
+  </section>
+
+  <section class="panel">
+    <span class="eyebrow">Las cuatro, lado a lado</span>
+    <div class="cmp-wrap">
+      <table class="cmp">
+        <thead><tr id="cmpHead"></tr></thead>
+        <tbody id="cmpBody"></tbody>
+      </table>
+    </div>
+    <p class="footnote" id="cmpNote"></p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Filas Q y counts REALES, tomadas de tablas entrenadas con el notebook del reto
+  // (epsilon-greedy, alpha=0.1, gamma=0.99).
+  var ENVS = {
+    frozen: {
+      label: "FrozenLake-v1",
+      sub: "estado 14 · junto a la meta",
+      acts: [["←", "izquierda"], ["↓", "abajo"], ["→", "derecha"], ["↑", "arriba"]],
+      q: [0.7057, 0.7941, 0.7299, 0.7113],
+      n: [197, 7416, 646, 320],
+      qmin: 0, qmax: 1, qstep: 0.005, nmax: 8000,
+      note: "Recompensa escasa: +1 solo al llegar a la meta. Q vive en [0, 1], " +
+            "así que el retorno máximo posible del entorno es 1."
+    },
+    black: {
+      label: "Blackjack-v1",
+      sub: "suma 16 · crupier 10 · sin as",
+      acts: [["✋", "plantarse"], ["🃏", "pedir carta"]],
+      q: [-0.9018, -0.8915],
+      n: [2612, 5043],
+      qmin: -1, qmax: 1, qstep: 0.005, nmax: 6000,
+      note: "Una mano perdida de antemano: ambas acciones valen cerca de −0.9. " +
+            "Solo hay 2 acciones y las separa 0.01."
+    },
+    taxi: {
+      label: "Taxi-v4",
+      sub: "estado 402 · pasajero en R, destino Y",
+      acts: [["↓", "sur"], ["↑", "norte"], ["→", "este"], ["←", "oeste"],
+             ["⇧", "recoger"], ["⇩", "dejar"]],
+      q: [-0.5127, 9.522, -3.7301, -2.6992, -4.3457, -4.7072],
+      n: [41, 95, 38, 39, 7, 5],
+      qmin: -15, qmax: 21, qstep: 0.1, nmax: 200,
+      note: "Recompensa densa: −1 por paso, +20 por entrega, −10 por acción ilegal. " +
+            "Q se extiende sobre un rango enorme."
+    }
+  };
+
+  var envKey = "frozen";
+  var q = ENVS[envKey].q.slice();
+  var n = ENVS[envKey].n.slice();
+
+  var el = function (id) { return document.getElementById(id); };
+  var f = function (x, d) { return x.toFixed(d === undefined ? 3 : d); };
+  var pct = function (x) { return (x * 100).toFixed(1) + "%"; };
+  var nAct = function () { return q.length; };
+
+  // ---------- selector de entorno ----------
+  var bar = el("envbar");
+  Object.keys(ENVS).forEach(function (key) {
+    var b = document.createElement("button");
+    b.className = "envbtn";
+    b.type = "button";
+    b.setAttribute("aria-pressed", key === envKey ? "true" : "false");
+    b.innerHTML = ENVS[key].label + "<small>" + ENVS[key].sub + "</small>";
+    b.addEventListener("click", function () { switchEnv(key); });
+    bar.appendChild(b);
+  });
+
+  function switchEnv(key) {
+    envKey = key;
+    q = ENVS[key].q.slice();
+    n = ENVS[key].n.slice();
+    Array.prototype.forEach.call(bar.children, function (b, i) {
+      b.setAttribute("aria-pressed", Object.keys(ENVS)[i] === key ? "true" : "false");
+    });
+    buildStateGrid();
+    render();
+  }
+
+  // ---------- controles del estado ----------
+  function buildStateGrid() {
+    var env = ENVS[envKey];
+    var grid = el("stateGrid");
+    grid.innerHTML = "";
+    for (var i = 0; i < nAct(); i++) {
+      var card = document.createElement("div");
+      card.className = "act";
+      card.innerHTML =
+        '<div class="act-name"><span>a' + i + " · " + env.acts[i][1] + "</span>" +
+        '<span class="arrow">' + env.acts[i][0] + "</span></div>" +
+        '<div class="ctl"><div class="ctl-row"><label for="q' + i + '">Q(s,a)</label>' +
+        '<output id="qOut' + i + '"></output></div>' +
+        '<input type="range" id="q' + i + '" min="' + env.qmin + '" max="' + env.qmax +
+        '" step="' + env.qstep + '" value="' + q[i] + '"></div>' +
+        '<div class="ctl"><div class="ctl-row"><label for="n' + i + '">N(s,a)</label>' +
+        '<output id="nOut' + i + '"></output></div>' +
+        '<input type="range" id="n' + i + '" min="0" max="' + env.nmax +
+        '" step="1" value="' + n[i] + '"></div>';
+      grid.appendChild(card);
+    }
+    for (var j = 0; j < nAct(); j++) {
+      (function (idx) {
+        el("q" + idx).addEventListener("input", function (e) {
+          q[idx] = parseFloat(e.target.value); render();
+        });
+        el("n" + idx).addEventListener("input", function (e) {
+          n[idx] = parseInt(e.target.value, 10); render();
+        });
+      })(j);
+    }
+  }
+
+  // ---------- estrategias ----------
+  function argmaxSet(v) {
+    var m = Math.max.apply(null, v), s = [];
+    for (var i = 0; i < v.length; i++) { if (v[i] === m) s.push(i); }
+    return s;
+  }
+  function epsGreedyProbs(eps) {
+    var best = argmaxSet(q), p = [], k = nAct();
+    for (var i = 0; i < k; i++) {
+      p[i] = eps / k + (best.indexOf(i) >= 0 ? (1 - eps) / best.length : 0);
+    }
+    return p;
+  }
+  function ucbValues(c) {
+    var unvisited = [], i, k = nAct();
+    for (i = 0; i < k; i++) { if (n[i] === 0) unvisited.push(i); }
+    var Ns = n.reduce(function (a, b) { return a + b; }, 0);
+    var bonus = [], total = [];
+    for (i = 0; i < k; i++) {
+      bonus[i] = n[i] === 0 ? Infinity : c * Math.sqrt(Math.log(Ns + 1) / n[i]);
+      total[i] = q[i] + bonus[i];
+    }
+    var p = [], pool = unvisited.length > 0 ? unvisited : argmaxSet(total);
+    for (i = 0; i < k; i++) { p[i] = pool.indexOf(i) >= 0 ? 1 / pool.length : 0; }
+    return { bonus: bonus, total: total, p: p, Ns: Ns, unvisited: unvisited };
+  }
+  function softmaxProbs(tau) {
+    var logits = q.map(function (v) { return v / tau; });
+    var mx = Math.max.apply(null, logits);
+    var w = logits.map(function (v) { return Math.exp(v - mx); });
+    var sum = w.reduce(function (a, b) { return a + b; }, 0);
+    return { logits: logits, mx: mx, w: w, sum: sum, p: w.map(function (v) { return v / sum; }) };
+  }
+
+  function renderBars(container, p) {
+    var env = ENVS[envKey], html = "";
+    for (var i = 0; i < nAct(); i++) {
+      html += '<div class="bar-row"><span class="bar-lab">' + env.acts[i][0] + " " + env.acts[i][1].slice(0, 8) + "</span>" +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + (p[i] * 100).toFixed(2) + '%"></div></div>' +
+        '<span class="bar-val">' + pct(p[i]) + "</span></div>";
+    }
+    container.innerHTML = html;
+  }
+
+  // ---------- render ----------
+  function render() {
+    var env = ENVS[envKey], i, k = nAct();
+    for (i = 0; i < k; i++) {
+      el("qOut" + i).textContent = f(q[i], 3);
+      el("nOut" + i).textContent = String(n[i]);
+    }
+    var Ns = n.reduce(function (a, b) { return a + b; }, 0);
+    el("envNote").textContent = env.note;
+    el("nsLine").textContent = "N(s) = " + n.join(" + ") + " = " + Ns +
+      "  ·  ln(N(s)+1) = " + f(Math.log(Ns + 1), 4);
+
+    var qmax = Math.max.apply(null, q), qmin = Math.min.apply(null, q);
+    var spread = qmax - qmin;
+    var tau = parseFloat(el("tau").value);
+    var q0 = parseFloat(el("initQ0").value);
+    var ratio = spread / tau;
+    var peak = ratio > 8 ? "casi determinista" : (ratio > 2 ? "moderada" : "casi uniforme");
+
+    el("scale").innerHTML =
+      '<div><span class="k">rango de Q en esta fila</span><span class="v">' + f(spread, 3) +
+      '</span><span class="d">de ' + f(qmin, 3) + " a " + f(qmax, 3) + "</span></div>" +
+      '<div><span class="k">Q₀ frente al mejor Q real</span><span class="v">' +
+      (qmax > 0 ? f(q0 / qmax, 1) + "×" : "—") + '</span><span class="d' +
+      (q0 > qmax * 2 ? " alert" : "") + '">' +
+      (q0 > qmax * 2 ? "optimismo desproporcionado" : "optimismo moderado") + "</span></div>" +
+      '<div><span class="k">ΔQ ⁄ τ — nitidez de softmax</span><span class="v">' + f(ratio, 2) +
+      '</span><span class="d' + (ratio > 8 || ratio < 2 ? " alert" : "") + '">' + peak + "</span></div>";
+
+    // eps-greedy
+    var eps = parseFloat(el("eps").value);
+    el("epsOut").textContent = f(eps, 2);
+    var pe = epsGreedyProbs(eps), best = argmaxSet(q), w = "";
+    for (i = 0; i < k; i++) {
+      var isB = best.indexOf(i) >= 0;
+      w += '<span class="lbl">P(a' + i + ") = </span>" +
+        (isB ? f((1 - eps) / best.length) + " + " : "          ") + f(eps / k) +
+        '  =  <span class="' + (isB ? "win" : "") + '">' + f(pe[i]) + "</span>\n";
+    }
+    el("epsWork").innerHTML = w;
+    renderBars(el("epsBars"), pe);
+
+    // optimista
+    var epsO = parseFloat(el("epsOpt").value);
+    el("epsOptOut").textContent = f(epsO, 3);
+    renderBars(el("optBars"), epsGreedyProbs(epsO));
+    var alpha = parseFloat(el("alpha").value);
+    el("initQ0Out").textContent = f(q0, 1);
+    el("alphaOut").textContent = f(alpha, 2);
+    var dec = '<span class="lbl">Un par (s,a) cuyo valor real es ' + f(qmax, 2) +
+      ', actualizado repetidamente:</span>\n', val = q0;
+    for (var step = 0; step <= 4; step++) {
+      dec += "  k=" + step + "   Q = " + f(val, 4) + (step === 0 ? '   <span class="lbl">(sin probar)</span>' : "") + "\n";
+      val = val + alpha * (qmax - val);
+    }
+    dec += '  ...\n<span class="lbl">  Q(k) = Q_real + (Q₀ − Q_real)·(1−α)^k</span>';
+    el("optWork").innerHTML = dec;
+    var gap = q0 - qmax;
+    el("decaySteps").textContent = gap <= 0.05 ? "0" :
+      String(Math.ceil(Math.log(0.05 / gap) / Math.log(1 - alpha)));
+
+    // UCB
+    var c = parseFloat(el("cc").value);
+    el("ccOut").textContent = f(c, 2);
+    var u = ucbValues(c), uw = "";
+    if (u.unvisited.length > 0) {
+      uw = '<span class="win">Hay acciones con N(s,a) = 0 → se eligen primero,\nsin aplicar la fórmula (evita dividir entre cero).</span>\n';
+    } else {
+      var ubest = argmaxSet(u.total);
+      for (i = 0; i < k; i++) {
+        var win = ubest.indexOf(i) >= 0;
+        uw += '<span class="lbl">a' + i + "</span> " + f(q[i], 3).padStart(8) + " + " +
+          f(u.bonus[i], 3).padStart(7) + ' = <span class="' + (win ? "win" : "") + '">' +
+          f(u.total[i], 3).padStart(8) + "</span>" + (win ? '  <span class="win">◄</span>' : "") + "\n";
+      }
+      uw += '<span class="lbl">        Q       bono(c=' + f(c, 2) + ")</span>";
+    }
+    el("ucbWork").innerHTML = uw;
+    renderBars(el("ucbBars"), u.p);
+
+    // softmax
+    el("tauOut").textContent = f(tau, 2);
+    var s = softmaxProbs(tau), sw = '<span class="lbl">   logit=Q/τ      −máx        exp       prob</span>\n';
+    for (i = 0; i < k; i++) {
+      sw += '<span class="lbl">a' + i + "</span>" + f(s.logits[i], 2).padStart(9) +
+        f(s.logits[i] - s.mx, 2).padStart(11) + f(s.w[i], 4).padStart(11) +
+        f(s.p[i], 4).padStart(11) + "\n";
+    }
+    el("sofWork").innerHTML = sw;
+    renderBars(el("sofBars"), s.p);
+    el("sofNote").innerHTML = "Con ΔQ = " + f(spread, 3) + " y τ = " + f(tau, 2) +
+      ", la razón ΔQ⁄τ vale <strong>" + f(ratio, 2) + "</strong> → distribución " + peak +
+      ". El mismo τ = 0.50 del reto da razones muy distintas en los tres entornos.";
+
+    // comparación
+    var rows = [
+      { name: "ε-greedy", p: pe, hue: "--s-eps" },
+      { name: "optimista", p: epsGreedyProbs(epsO), hue: "--s-opt" },
+      { name: "UCB", p: u.p, hue: "--s-ucb" },
+      { name: "softmax", p: s.p, hue: "--s-sof" }
+    ];
+    var head = "<th>estrategia</th>";
+    for (i = 0; i < k; i++) {
+      head += "<th>" + env.acts[i][0] + "<br>Q=" + f(q[i], 2) + "<br>N=" + n[i] + "</th>";
+    }
+    el("cmpHead").innerHTML = head;
+    var body = "";
+    rows.forEach(function (r) {
+      var mx = Math.max.apply(null, r.p);
+      body += '<tr><td style="color:var(' + r.hue + ')">' + r.name + "</td>";
+      for (var j = 0; j < k; j++) {
+        body += '<td class="' + (r.p[j] === mx ? "hi" : "") + '">' + pct(r.p[j]) + "</td>";
+      }
+      body += "</tr>";
+    });
+    el("cmpBody").innerHTML = body;
+
+    var worst = q.indexOf(qmin);
+    el("cmpNote").textContent =
+      "Columna de la peor acción (" + env.acts[worst][1] + ", Q=" + f(qmin, 3) + "): ε-greedy le da " +
+      pct(pe[worst]) + " y softmax " + pct(s.p[worst]) +
+      ". ε-greedy reparte igual sin mirar Q; softmax pesa por valor; UCB decide por incertidumbre.";
+  }
+
+  ["eps", "epsOpt", "initQ0", "alpha", "cc", "tau"].forEach(function (id) {
+    el(id).addEventListener("input", render);
+  });
+
+  buildStateGrid();
+  render();
+})();
+</script>
+
+</body>
+</html>
