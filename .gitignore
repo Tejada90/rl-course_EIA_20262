@@ -33,6 +33,9 @@ coverage.xml
 !.vscode/extensions.json
 !.vscode/settings.json
 
+# Configuración local de Claude Code (permisos personales, no compartir)
+.claude/settings.local.json
+
 # Configuración local de otros editores
 .idea/
 *.swp
@@ -73,3 +76,9 @@ Thumbs.db
 # Archivos temporales
 *.tmp
 *.temp
+
+# Guion personal de sustentacion (no se entrega)
+GUION_SUSTENTACION.md
+
+# Excepcion: los dos modelos del Reto 4 los necesita el notebook (16 KB)
+!challenges/Reto4_ProyectoLibre/submission/results/*.pt
